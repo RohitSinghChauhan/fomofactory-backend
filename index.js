@@ -56,8 +56,14 @@ const fetchData = async () => {
 //To Schedule the fetch every 5 seconds
 cron.schedule('*/5 * * * * *', fetchData);
 
-app.get('/', (req, res) => {
-    res.send('Welcome to the base route');
+app.get('/', async (req, res) => {
+    try {
+        const stocks = await Stock.find();
+        res.json(stocks);
+    } catch (error) {
+        console.error(error);
+        res.status(500).send('Server error');
+    }
 });
 
 app.listen(process.env.PORT, async () => {
